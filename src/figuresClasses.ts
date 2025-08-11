@@ -15,21 +15,24 @@ export class Triangle implements Figure {
   c: number;
 
   constructor(color: Color, a: number, b: number, c: number) {
+    if (a <= 0 || b <= 0 || c <= 0) {
+      throw new Error(
+        `Side a (${a}), b (${b}), or c (${c}) must be greater than 0`,
+      );
+    }
+
+    const sides = [a, b, c].sort((x, y) => x - y);
+    const [side1, side2, longest] = sides;
+
+    if (longest >= side1 + side2) {
+      throw new Error(
+        `Triangle inequality violated: the longest side (c = ${longest}) is greater than or equal to the sum of the other two sides (a = ${side1}, b = ${side2})`,
+      );
+    }
     this.color = color;
     this.a = a;
     this.b = b;
     this.c = c;
-
-    const maxSide = Math.max(a, b, c);
-    const sumOthers = a + b + c - maxSide;
-
-    if (maxSide >= sumOthers) {
-      throw new Error('Invalid triangle sides');
-    }
-
-    if (a <= 0 || b <= 0 || c <= 0) {
-      throw new Error('Sides must be > 0');
-    }
   }
 
   getArea(): number {
@@ -49,12 +52,11 @@ export class Circle implements Figure {
   color: Color;
 
   constructor(color: Color, radius: number) {
+    if (radius <= 0) {
+      throw new Error(`Radius must be greater than 0, got ${radius}`);
+    }
     this.radius = radius;
     this.color = color;
-
-    if (radius <= 0) {
-      throw new Error('Radius must be > 0');
-    }
   }
 
   getArea(): number {
@@ -74,13 +76,17 @@ export class Rectangle implements Figure {
   shape: Shape = 'rectangle';
 
   constructor(color: Color, width: number, height: number) {
+    if (width <= 0) {
+      throw new Error(`Width must be greater than 0, got ${width}`);
+    }
+
+    if (height <= 0) {
+      throw new Error(`Height must be greater than 0, got ${height}`);
+    }
+
     this.color = color;
     this.width = width;
     this.height = height;
-
-    if (width <= 0 || height <= 0) {
-      throw new Error('Width and height must be > 0');
-    }
   }
 
   getArea(): number {
